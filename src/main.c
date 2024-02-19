@@ -1,120 +1,102 @@
 #include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
 
 struct node {
-	int8_t freq;
+	struct node* prev;
+	struct node* next;
 	uint8_t data;
-
-	struct node* left;
-	struct node* right;
 };
 
-struct node* insert(struct node* root, int8_t freq) {
-	if (root == NULL) {
-		root = (struct node*)malloc(sizeof(struct node));
-
-		root->freq = freq;
-		
-		root->left = 0;
-		root->right = 0;
-
-		return root;
-	}
-
-	// 	if (root->left->freq < root->right->freq) {
-	// 		root->left = insert(root->left, freq);
-	// 	} else {
-	// 		root->right = insert(root->right, freq);
-	// 	}
-	// }
-
-	if (root->left == NULL && root->right == NULL) {
-		if (freq < root->freq) {
-			root->left = insert(root->left, freq);
-			root->right = insert(root->right, root->freq);
-		} else {
-			root->left = insert(root->left, root->freq);
-			root->right = insert(root->right, freq);
-		}
-	} else {
-		if (root->left) {
-			if (root->left->freq - freq < freq) {
-				if (root->left->freq < root->right->freq) {
-					root->left = insert(root->left, freq);
-				} else {
-					root->right = insert(root->right, freq);
-				}
-			}
-		}
-	}
-
-	root->freq += freq;
+int main() {
+	const char* data = "ABCDEFGGGABS";
 	
-}/
+	uint8_t freq_array[256] = { 0 };
+	uint8_t freq_next_ptr_array[256] = { 0 };
 
-	return root;
-}
+	uint8_t next_ptr_array[256] = { 0 };
+	uint8_t prev_ptr_array[256] = { 0 };
 
-void traverse(struct node* root, int level) {
-	if (root != NULL) {
+	uint8_t sorted_array_size = 0;
 
-		traverse(root->right, level + 1);
-		for (int i = 0; i < level; i++) {
-			printf("\t");
+	uint8_t root = 0;
+	
+	for (int i =  0; data[i] != '\0'; i++) {
+		if (freq_array[data[i]] == 0) {
+			sorted_array_size += 1;
 		}
 
-		printf("%i\n", root->freq);
-		traverse(root->left, level + 1);
+		// if (i == 0) {
+		// 	root = data[i];
+		// 	next_ptr_array[data[i]] = data[i];
+		// } else {
+		// 	uint8_t next = root;
+
+		// 	// while (freq_array[data[i]] >= freq_array[next]) {
+		// 	// 	next = next_ptr_array[next];
+		// 	// }
+
+		// 	// next_ptr_array[data[i]] = next;
+		// }
+
+		// prev_ptr_array[data[i]] = freq_next_ptr_array[freq_array[data[i]]];
+		// next_ptr_array[data[i]] = next_ptr_array[freq_next_ptr_array[freq_array[data[i]]]];
+		// freq_next_ptr_array[freq_array[data[i]]] = 
+
+		// if (freq_array[data[i]] == 0) {
+		// 	next_ptr_array[data[i]] = root;
+		// 	prev_ptr_array[root] = data[i];
+		// 	root = data[i];
+		// } else {
+		// 	if (freq_array[data[i]] >= freq_array[next_ptr_array[data[i]]]) {
+		// 		uint8_t p_a = prev_ptr_array[data[i]];
+		// 		uint8_t p_b = data[i];
+		// 		uint8_t p_c = next_ptr_array[data[i]];
+		// 		uint8_t p_d = next_ptr_array[next_ptr_array[data[i]]];
+
+		// 		if (freq_array[p_c]) {
+		// 			prev_ptr_array[p_b] = p_c;
+		// 			prev_ptr_array[p_c] = p_a;
+		// 			prev_ptr_array[p_d] = p_b;
+					
+		// 			next_ptr_array[p_a] = p_c;
+		// 			next_ptr_array[p_b] = p_d;
+		// 			next_ptr_array[p_c] = p_b;
+
+		// 			printf("%c - %c - %c - %c\n", p_a, p_b, p_c, p_d);
+	
+		// 			if (data[i] == root) {
+		// 				root = p_c;
+		// 			}
+		// 		}
+		// 	}
+		// }
+
+		// uint8_t next = root;
+		// for (int i = 0; i < sorted_array_size; i++) {
+		// 	if (i != 0)
+		// 		printf(" -> ");
+		// 	printf("%c", next);
+		// 	next = next_ptr_array[next];
+		// }
+		// printf("\n");
+
+		freq_array[data[i]] += 1;
 	}
-}
-
-int main(int count, char** args) {
-	// FILE* fp = fopen("/home/laperex/Programming/C++/compressor/100KB.bin", "rb");
-	// fseek(fp, 0, SEEK_END);
-	// int sz = ftell(fp);
-	// rewind(fp);
-
-	// while (ftell(fp) < sz) {
-	// 	fgets(data + ftell(fp), 100, fp);
+	
+	printf("sorted array size - %i\n", sorted_array_size);
+	printf("smallest - %c\n", root);
+	
+	for (int i = 0; i < 256; i++) {
+		if (freq_array[i]) {
+			printf("%c - %i - %c - %c\n", i, freq_array[i], prev_ptr_array[i], next_ptr_array[i]);
+		}
+	}
+	// uint8_t next = root;
+	// for (int i = 0; i < sorted_array_size; i++) {
+	// 	if (i != 0)
+	// 		printf(" -> ");
+	// 	printf("%c", next);
+	// 	next = next_ptr_array[next];
 	// }
-
-	// uint8_t* data = (uint8_t*)"loremipsumdolorsitamisskrishnadevk-massecheussetsisinusaisinanviablestateofplatinumbollocksdownde";
-
-	// struct node data_instance_count[256] = { 0 };
-
-	// for (int i = 0; i < sizeof(data); i++) {
-	// 	data_instance_count[data[i]].freq++;
-	// }
-
-	// printf("%i\n", data[0]);
-	
-	struct node* root = NULL;
-	// root = (struct node*)malloc(sizeof(struct node));
-	
-	// root->freq = 1;
-	
-	// printf("%i\n", root->freq);
-	
-	root = insert(root, 1);
-	root = insert(root, 2);
-	root = insert(root, 2);
-	root = insert(root, 2);
-	// root = insert(root, 3);
-	// root = insert(root, 1);
-
-	// root = insert(root, 2);
-	// root = insert(root, 3);
-	// root = insert(root, 4);
-	// root = insert(root, 3);
-	// root = insert(root, 3);
-	// traverse(root, 0);
-	// root = insert(root, 2);
-	traverse(root, 0);
-	// root = insert(root, 2);
-	// root = insert(root, 5);
-	// root = insert(root, 2);
-	// root = insert(root, 3);
-	
-	// printf("%i\n", root->freq);
+	// printf("\n");
 }
