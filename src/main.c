@@ -1,8 +1,9 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#define create_element(data, code, freq) ()
+
 struct node {
-	// uint16_t leaf;
 	uint16_t tag;
 	uint16_t data;
 	uint16_t freq;
@@ -17,7 +18,6 @@ void swap_u16(uint16_t* a, uint16_t* b) {
 void swap_node(struct node* a, struct node* b) {
 	swap_u16(&a->data, &b->data);
 	swap_u16(&a->freq, &b->freq);
-	// swap_u16(&a->leaf, &b->leaf);
 	swap_u16(&a->tag, &b->tag);
 }
 
@@ -43,10 +43,10 @@ void print_bin(int val) {
 	index = 0;
 }
 
-void traverse(const struct node* root, int index, int level) {
+void traverse(const struct node* root, uint16_t* result_array, uint16_t* result_array_idx, int index, int level, int id) {
 	if (index >= 0) {
 		if (root[index].tag) {
-			traverse(root, root[index].data & 255, level + 1);
+			traverse(root, result_array, result_array_idx, root[index].data & 255, level + 1, (id << 1) | 1);
 
 			for (int i = 0; i < level; i++) {
 				printf("\t");
@@ -56,20 +56,27 @@ void traverse(const struct node* root, int index, int level) {
 
 			printf("%i", root[index].freq);
 			printf(" [");
-			print_bin(root[index].tag);
+			// print_bin(root[index].tag);
+			print_bin(id);
 			printf("]");
+			// printf(" (");
+			// print_bin(id);
+			// printf(")");
 			printf("\n");
 
-			traverse(root, root[index].data >> 8, level + 1);
+			traverse(root, result_array, result_array_idx, root[index].data >> 8, level + 1, id << 1);
 		} else {
 			for (int i = 0; i < level; i++) {
 				printf("\t");
 			}
-			
+
 			printf("| %c - %i", root[index].data, root[index].freq);
 
+			result_array[(*result_array_idx)++] = (id << 8) | root[index].data;
+
 			printf(" [");
-			print_bin(root[index].tag);
+			// print_bin(root[index].tag);
+			print_bin(id);
 			printf("]");
 			
 			printf("\n");
@@ -81,7 +88,7 @@ void traverse(const struct node* root, int index, int level) {
 int main() {
 	const char* data = "ABCDEFGGGABS";
 	
-	uint8_t idx_array[256] = { 0 };
+	uint16_t idx_array[256] = { 0 };
 
 	struct node condensed_array[2 * 256 - 1] = { 0 };
 
@@ -98,6 +105,8 @@ int main() {
 		condensed_array[idx_array[data[i]]].freq++;
 	}
 
+	printf("---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- \n");
+	
 	printf("sorted array size - %i\n", condensed_array_idx);
 
 	for (int i = 0; i < condensed_array_idx; i++) {
@@ -115,8 +124,39 @@ int main() {
 		}
 	}
 
+	printf("---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- \n");
+
 	printf("tree array size - %i\n", condensed_array_idx);
 
-	traverse(condensed_array, condensed_array_idx - 1, 0);
+	printf("---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- \n");
 
+	for (int i = 0; i < condensed_array_idx; i++) {
+		printf("%i: ", i);
+		if (condensed_array[i].tag) {
+			printf("%i - %i : %i\n", condensed_array[i].data >> 8, condensed_array[i].data & 255, condensed_array[i].freq);
+		} else {
+			printf("%c : %i\n", condensed_array[i].data, condensed_array[i].freq);
+		}
+	}
+
+	printf("---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- \n");
+
+	uint16_t result_array[512];
+	uint16_t result_array_idx = 0;
+
+	traverse(condensed_array, result_array, &result_array_idx, condensed_array_idx - 1, 0, 1);
+
+	printf("---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- \n");
+
+	for (int i = 0; i < result_array_idx; i++) {
+		if (result_array[i]) {
+			printf("%c - ", result_array[i] & 255);
+			print_bin(result_array[i] >> 8);
+			printf("\n");
+		}
+	}
+	
+	print_bin(255 * 255);
+	
+	printf("\n---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- \n");
 }
