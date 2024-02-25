@@ -12,12 +12,6 @@ void swap_u32(uint32_t* a, uint32_t* b) {
 void print_bin(int val, uint32_t def) {
 	static int index = 0;
 	static uint8_t array[256];
-	
-	if (val == 0) {
-		printf("%i", val);
-
-		return;
-	}
 
 	while (val || def != 0) {
 		array[index++] = val & 1;
@@ -35,11 +29,11 @@ void print_bin(int val, uint32_t def) {
 	index = 0;
 }
 
-void traverse(const uint32_t* root, uint32_t* result_array, uint16_t* result_array_idx, int index, int level, int id) {
+void traverse(const uint32_t* root, uint16_t* result_array, int index, int level, int id) {
 	if (index >= 0) {
 		if ((root[index] >> 16) & 1) {
 			// printf("%i", root[index] >> 17);
-			traverse(root, result_array, result_array_idx, (root[index] >> 17) + 1, level + 1, (id << 1) | 1);
+			traverse(root, result_array, (root[index] >> 17) + 1, level + 1, (id << 1) | 1);
 
 			for (int i = 0; i < level; i++) {
 				printf("\t");
@@ -57,7 +51,7 @@ void traverse(const uint32_t* root, uint32_t* result_array, uint16_t* result_arr
 			// printf(")");
 			printf("\n");
 
-			traverse(root, result_array, result_array_idx, (root[index] >> 17), level + 1, id << 1);
+			traverse(root, result_array, (root[index] >> 17), level + 1, id << 1);
 		} else {
 			for (int i = 0; i < level; i++) {
 				printf("\t");
@@ -65,7 +59,7 @@ void traverse(const uint32_t* root, uint32_t* result_array, uint16_t* result_arr
 
 			printf("| %c - %i", root[index] >> 17, root[index] & FREQ_BIT);
 
-			result_array[(*result_array_idx)++] = (id << 8) | (root[index] >> 17);
+			result_array[root[index] >> 17] = id;
 
 			printf(" [");
 			// print_bin(root[index].tag, 0);
@@ -78,9 +72,10 @@ void traverse(const uint32_t* root, uint32_t* result_array, uint16_t* result_arr
 }
 
 int main() {
-	// const char* data = "ABCD237y6428fhweahofurawheuitrhwioautryolsegnsliurngvfiuvbudsgrftyasfksbfdvsbkeufyba75yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2ABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2ABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2ABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2ABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2ABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2ABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2ABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2ABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2ABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2";
-	const char* data = "ABCDEFGGGABS";
-
+	const char* data = "ABCD237y6428fhweahofurawheuitrhwioautryolsegnsliurngvfiuvbudsgrftyasfksbfdvsbkeufyba75yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2ABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2ABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2ABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2ABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2ABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2ABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2ABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2ABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2ABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2";
+	// const char* data = "ABCDEFGGGABSskfjdhdsfdsklgjdgsdfjskgmlksdm ds f kdsfmsekfdskfmmskdmg dsfndlskjgnskrnglsrg  eifhajlerioghjoi dfigsehjgroloiejrsoigjlaoehrglfousehlrgihseliu widhwer wr wf ewfete ewrwetr ewfiewoewklfj;eragioersgf;oewvnajew efiewjg;aeoirghjiradklafnljgnlouregudjsahfughlanfv"; // v
+	uint32_t data_size = 0;
+	
 	uint16_t idx_array[256] = { 0 };
 
 	uint32_t condensed_array[2 * 256 - 1] = { 0 };
@@ -95,6 +90,8 @@ int main() {
 		}
 
 		condensed_array[idx_array[data[i]]]++;
+
+		data_size++;
 	}
 
 	printf("---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- \n");
@@ -124,7 +121,7 @@ int main() {
 	printf("---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- \n");
 
 	for (int i = 0; i < condensed_array_idx; i++) {
-		// printf("%i: ", i);
+		printf("%i: ", i);
 		if ((condensed_array[i] >> 16) & 1) {
 			printf("%i - %i : %i\n", condensed_array[i] >> 17, (condensed_array[i] >> 17) + 1, condensed_array[i] & FREQ_BIT);
 		} else {
@@ -140,7 +137,7 @@ int main() {
 
 	printf("---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- \n");
 
-	uint32_t result_array[512];
+	uint16_t id_array[256] = { 0 };
 	uint16_t result_array_idx = 0;
 	
 	uint32_t stack[2 * 256 - 1] = { 0 };
@@ -163,62 +160,92 @@ int main() {
 	// 	}
 	// }
 
-	traverse(condensed_array, result_array, &result_array_idx, condensed_array_idx - 1, 0, 1);
+	traverse(condensed_array, id_array, condensed_array_idx - 1, 0, 1);
 
 	printf("---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- \n");
 
-	for (int i = 0; i < result_array_idx; i++) {
-		if (result_array[i]) {
-			printf("%c - ", result_array[i] & 255);
-			if ((result_array[i] >> 8) > 511) {
+	for (int i = 0; i < 256; i++) {
+		if (id_array[i]) {
+			printf("%c - ", i);
+			if (id_array[i] > 511) {
 				printf(" [T] ");
 			}
-			print_bin(result_array[i] >> 8, 0);
+			print_bin(id_array[i], 0);
 			printf("\n");
 		}
 	}
+
+	printf("---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- \n");
+
+	// uint32_t val = result_array[data[index]];
+
+	// uint32_t v = 511;
+
+	uint32_t bit_i = 0;
+	uint8_t store_array[8000] = { 0 };
+	uint32_t len = 0;
+
+	{
+
+		for (uint32_t index = 0; data[index] != '\0'; index++) {
+			for (uint32_t j = 0; j < 16; j++) {
+				if (id_array[data[index]] >> j == 1) {
+					for (uint8_t k = 0; k < j; k++) {
+						store_array[bit_i >> 3] |= ((id_array[data[index]] >> (j - k - 1)) & 1) << (8 - (bit_i % 8) - 1);
+						bit_i += 1;
+					}
+				}
+			}
+		}
+
+		for (int i = 0; i < (bit_i >> 3); i++) {
+			print_bin(store_array[i], 8);
+		}
+		
+		printf("\nsize = %i\n", (bit_i - 1) >> 3);
+		
+		len = bit_i;
+	}
+
+	uint32_t pos = condensed_array_idx - 1;
+	printf("%s\n", data);
+	
+	char final_result[10000] = { 0 };
+	int final_result_index = 0;
+
+	for (int i = 0; i < len; i++) {
+		// printf("%i %i\n", pos, ((store_array[i >> 3] >> ((8 - (i % 8)) - 1)) & 1));
+
+		if ((condensed_array[pos] >> 16) & 1) {
+			pos = (condensed_array[pos] >> 17) + ((store_array[i >> 3] >> ((8 - (i % 8)) - 1)) & 1);
+
+			if (((condensed_array[pos] >> 16) & 1) == 0) {
+				final_result[final_result_index++] = condensed_array[pos] >> 17;
+				pos = condensed_array_idx - 1;
+			}
+		}
+		// printf("%i\n", (store_array[i >> 3] >> ((8 - (i % 8)) - 1)) & 1);
+	}
+	
 	
 	printf("---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- \n");
 	
-	uint32_t index = 0;
-	// uint32_t val = result_array[data[index]];
-
-	uint8_t store_array[100] = { 0 };
+	// printf("%s\n", final_result);
 	
-	// uint32_t v = 511;
-	
-	uint32_t i = 0;
-
-	// while (data[index] != 0) {
-		for (uint32_t v = result_array[data[index]]; v != 1; v >>= 1) {
-			store_array[i >> 3] |= (v & 1) << (i % 8);
-			
-			print_bin(v, 8);
-			printf("\n");
-			
-			i++;
+	for (int i = 0; i < final_result_index; i++) {
+		if (data[i] != final_result[i]) {
+			printf("\nincorrect!");
+			break;
+		} else {
+			printf("%c", final_result[i]);
 		}
-		
-		// print_bin(store_array[(i - 1) >> 3], i - 1);
-		
-	// 	index++;
-	// }
+	}
+	printf("\n");
 	
-	// for (int j = 0; j < (i >> 3); j++) {
-	// 	print_bin()
-	// }
-
-	// while (data[index] != '\0') {
-	// 	if (val == 1) {
-	// 		index++;
-	// 	} else {
-			
-	// 	}
-	// }
+	// printf("%i - %i\n", final_result_index, data_size);
 	
-	// printf("---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- \n");
-	
-	
+	float ratio = ((float)(bit_i >> 3) / (float)(data_size)) * 100;
+	printf("compression ratio = %f%\n", ratio);
 }
 
 // 00101001100000000000000001
