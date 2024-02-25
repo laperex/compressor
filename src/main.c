@@ -71,10 +71,10 @@ void traverse(const uint32_t* root, uint16_t* result_array, int index, int level
 	}
 }
 
-#define DATA_SIZE (128)
+#define DATA_SIZE (1000)
 
 int main() {
-	uint8_t data[1000] = "2e1284e1243                       q";
+	uint8_t data[DATA_SIZE] = "2e1284e1243                       q";
 	
 	for (uint32_t i = 0; i < DATA_SIZE; i++) {
 		data[i] = (i + 1) % 256;
@@ -86,7 +86,7 @@ int main() {
 
 	uint32_t condensed_array[2 * 256 - 1] = { 0 };
 
-	uint8_t condensed_array_idx = 0;
+	uint32_t condensed_array_idx = 0;
 
 	for (int i =  0; i < DATA_SIZE; i++) {
 		if ((condensed_array[idx_array[data[i]]] >> 17) != data[i]) {
@@ -104,7 +104,7 @@ int main() {
 
 	printf("sorted array size - %i\n", condensed_array_idx);
 	
-	uint16_t leaf_count = condensed_array_idx;
+	// uint16_t leaf_count = condensed_array_idx;
 
 	for (int i = 0; i < condensed_array_idx; i++) {
 		for (int j = i + 1; j < condensed_array_idx; j++) {
@@ -143,7 +143,6 @@ int main() {
 	printf("---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- \n");
 
 	uint16_t id_array[256] = { 0 };
-	uint16_t result_array_idx = 0;
 
 	traverse(condensed_array, id_array, condensed_array_idx - 1, 0, 1);
 
@@ -173,7 +172,7 @@ int main() {
 	{
 
 		for (uint32_t index = 0; index < DATA_SIZE; index++) {
-			for (uint32_t j = 0; j < 17; j++) {
+			for (uint32_t j = 0; j < 20; j++) {
 				if (id_array[data[index]] >> j == 1) {
 					for (uint8_t k = 0; k < j; k++) {
 						store_array[bit_i >> 3] |= ((id_array[data[index]] >> (j - k - 1)) & 1) << (8 - (bit_i % 8) - 1);
@@ -200,7 +199,7 @@ int main() {
 	
 	printf("\n");
 	
-	char final_result[100000] = { 0 };
+	uint8_t final_result[100000] = { 0 };
 	int final_result_index = 0;
 
 	for (int i = 0; i < len; i++) {
@@ -236,10 +235,10 @@ int main() {
 	
 	printf("---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- \n");
 	
-	float ratio = ((float)(bit_i >> 3) / (float)(data_size)) * 100;
+	float ratio = (1 - ((float)(bit_i >> 3) / (float)(data_size))) * 100;
 	printf("data_size = %i\n", data_size);
 	printf("comp_size = %lu\n", (bit_i >> 3));
-	printf("compression ratio = %f%\n", ratio);
+	printf("compression ratio = %.2f%\n", ratio);
 	printf("---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- \n");
 
 }
