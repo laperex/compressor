@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Site BuildName="Linux-g++"
-	BuildStamp="20240223-0644-Experimental"
+	BuildStamp="20240225-0424-Experimental"
 	Name="archlinux"
 	Generator="ctest-3.28.3"
 	CompilerName="/usr/bin/g++"
@@ -21,14 +21,14 @@
 	TotalVirtualMemory="15999"
 	TotalPhysicalMemory="15714"
 	LogicalProcessorsPerPhysical="1"
-	ProcessorClockFrequency="1435.59"
+	ProcessorClockFrequency="2300"
 	>
 	<Testing>
-		<StartDateTime>Feb 23 18:52 IST</StartDateTime>
-		<StartTestTime>1708694568</StartTestTime>
+		<StartDateTime>Feb 25 10:16 IST</StartDateTime>
+		<StartTestTime>1708836385</StartTestTime>
 		<TestList/>
-		<EndDateTime>Feb 23 18:52 IST</EndDateTime>
-		<EndTestTime>1708694568</EndTestTime>
+		<EndDateTime>Feb 25 10:16 IST</EndDateTime>
+		<EndTestTime>1708836385</EndTestTime>
 		<ElapsedMinutes>0</ElapsedMinutes>
 	</Testing>
 </Site>

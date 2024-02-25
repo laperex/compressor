@@ -3,31 +3,13 @@
 
 #define FREQ_BIT ((256 * 256) - 1)
 
-struct node {
-	uint16_t tag;
-	uint16_t data;
-	uint16_t freq;
-};
-
-void swap_u16(uint16_t* a, uint16_t* b) {
-	uint16_t tmp = *a;
-	*a = *b;
-	*b = tmp;
-}
-
 void swap_u32(uint32_t* a, uint32_t* b) {
 	uint32_t tmp = *a;
 	*a = *b;
 	*b = tmp;
 }
 
-void swap_node(struct node* a, struct node* b) {
-	swap_u16(&a->data, &b->data);
-	swap_u16(&a->freq, &b->freq);
-	swap_u16(&a->tag, &b->tag);
-}
-
-void print_bin(int val) {
+void print_bin(int val, uint32_t def) {
 	static int index = 0;
 	static uint8_t array[256];
 	
@@ -37,9 +19,13 @@ void print_bin(int val) {
 		return;
 	}
 
-	while (val) {
+	while (val || def != 0) {
 		array[index++] = val & 1;
 		val = val >> 1;
+		
+		if (def != 0) {
+			def--;
+		}
 	}
 
 	for (int i = 0; i < index; i++) {
@@ -49,7 +35,7 @@ void print_bin(int val) {
 	index = 0;
 }
 
-void traverse(const uint32_t* root, uint16_t* result_array, uint16_t* result_array_idx, int index, int level, int id) {
+void traverse(const uint32_t* root, uint32_t* result_array, uint16_t* result_array_idx, int index, int level, int id) {
 	if (index >= 0) {
 		if ((root[index] >> 16) & 1) {
 			// printf("%i", root[index] >> 17);
@@ -63,11 +49,11 @@ void traverse(const uint32_t* root, uint16_t* result_array, uint16_t* result_arr
 
 			printf("%i", root[index] & FREQ_BIT);
 			printf(" [");
-			// print_bin(root[index].tag);
-			print_bin(id);
+			// print_bin(root[index].tag, 0);
+			print_bin(id, 0);
 			printf("]");
 			// printf(" (");
-			// print_bin(id);
+			// print_bin(id, 0);
 			// printf(")");
 			printf("\n");
 
@@ -82,8 +68,8 @@ void traverse(const uint32_t* root, uint16_t* result_array, uint16_t* result_arr
 			result_array[(*result_array_idx)++] = (id << 8) | (root[index] >> 17);
 
 			printf(" [");
-			// print_bin(root[index].tag);
-			print_bin(id);
+			// print_bin(root[index].tag, 0);
+			print_bin(id, 0);
 			printf("]");
 
 			printf("\n");
@@ -92,8 +78,9 @@ void traverse(const uint32_t* root, uint16_t* result_array, uint16_t* result_arr
 }
 
 int main() {
+	// const char* data = "ABCD237y6428fhweahofurawheuitrhwioautryolsegnsliurngvfiuvbudsgrftyasfksbfdvsbkeufyba75yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2ABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2ABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2ABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2ABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2ABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2ABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2ABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2ABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2ABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7ytABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjnABCD237y642875yr2dkljfhjhafnjeh49376ygb8uehbg7esvtgry478w354ytnbyreuighbw735yvgthuisehnvghi7yt34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefcsjdgfaesyrfvjn34w87ebtgh4u7weyftnh7wcyesngfcsbys745EFGGGABSsdjisaiodjafndsfnosdnofisdsfjkwheurgtihaifmsniaesulrtgoaiwulnefc            sjdgfaesyrfvjn dsjgfhawkygf  fetew     oidfiqueahrgtiouh212376242375245y213hrufwhekjdsnfib43yt73e4yt534hwruhfwjerf3845y2";
 	const char* data = "ABCDEFGGGABS";
-	
+
 	uint16_t idx_array[256] = { 0 };
 
 	uint32_t condensed_array[2 * 256 - 1] = { 0 };
@@ -113,11 +100,15 @@ int main() {
 	printf("---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- \n");
 
 	printf("sorted array size - %i\n", condensed_array_idx);
+	
+	uint16_t leaf_count = condensed_array_idx;
 
 	for (int i = 0; i < condensed_array_idx; i++) {
 		for (int j = i + 1; j < condensed_array_idx; j++) {
+			// printf("i %i | j = %i\n", i, j);
 			if ((condensed_array[j] & FREQ_BIT) <= (condensed_array[i] & FREQ_BIT)) {
 				swap_u32(&condensed_array[j], &condensed_array[i]);
+				printf("i %i | j = %i\n", i, j);
 			}
 		}
 
@@ -133,7 +124,7 @@ int main() {
 	printf("---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- \n");
 
 	for (int i = 0; i < condensed_array_idx; i++) {
-		printf("%i: ", i);
+		// printf("%i: ", i);
 		if ((condensed_array[i] >> 16) & 1) {
 			printf("%i - %i : %i\n", condensed_array[i] >> 17, (condensed_array[i] >> 17) + 1, condensed_array[i] & FREQ_BIT);
 		} else {
@@ -141,10 +132,36 @@ int main() {
 		}
 	}
 
+	// for (int i = 0; i < condensed_array_idx; i++) {
+	// 	printf("%i", condensed_array[i]);
+	// 	// print_bin(condensed_array[i], 26);
+	// 	printf("\n");
+	// }
+
 	printf("---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- \n");
 
-	uint16_t result_array[512];
+	uint32_t result_array[512];
 	uint16_t result_array_idx = 0;
+	
+	uint32_t stack[2 * 256 - 1] = { 0 };
+	uint16_t stack_ptr = 0;
+
+	// uint16_t index = condensed_array_idx - 1;
+	uint16_t encounter_leaf_count = 0;
+
+	// while (encounter_leaf_count < leaf_count) {
+	// 	if ((condensed_array[index] >> 16) & 1) {
+	// 		stack[stack_ptr++] = index;
+
+	// 		if (condensed_array[index]) {
+				
+	// 		}
+	// 	} else {
+	// 		printf("%i", condensed_array[index] & FREQ_BIT);
+	// 		encounter_leaf_count++;
+	// 		index = stack[--stack_ptr];
+	// 	}
+	// }
 
 	traverse(condensed_array, result_array, &result_array_idx, condensed_array_idx - 1, 0, 1);
 
@@ -153,13 +170,89 @@ int main() {
 	for (int i = 0; i < result_array_idx; i++) {
 		if (result_array[i]) {
 			printf("%c - ", result_array[i] & 255);
-			print_bin(result_array[i] >> 8);
+			if ((result_array[i] >> 8) > 511) {
+				printf(" [T] ");
+			}
+			print_bin(result_array[i] >> 8, 0);
 			printf("\n");
 		}
 	}
 	
-	printf("\n---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- \n");
+	printf("---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- \n");
+	
+	uint32_t index = 0;
+	// uint32_t val = result_array[data[index]];
+
+	uint8_t store_array[100] = { 0 };
+	
+	// uint32_t v = 511;
+	
+	uint32_t i = 0;
+
+	// while (data[index] != 0) {
+		for (uint32_t v = result_array[data[index]]; v != 1; v >>= 1) {
+			store_array[i >> 3] |= (v & 1) << (i % 8);
+			
+			print_bin(v, 8);
+			printf("\n");
+			
+			i++;
+		}
+		
+		// print_bin(store_array[(i - 1) >> 3], i - 1);
+		
+	// 	index++;
+	// }
+	
+	// for (int j = 0; j < (i >> 3); j++) {
+	// 	print_bin()
+	// }
+
+	// while (data[index] != '\0') {
+	// 	if (val == 1) {
+	// 		index++;
+	// 	} else {
+			
+	// 	}
+	// }
+	
+	// printf("---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- \n");
+	
+	
 }
+
+// 00101001100000000000000001
+// 00100011000000000000000001
+// 00100010100000000000000001
+// 00100010000000000000000001
+// 00100001100000000000000001
+// 00000001010000000000000010
+// 00000000010000000000000010
+// 00100001000000000000000010
+// 00100000100000000000000010
+// 00000010010000000000000011
+// 00100011100000000000000011
+// 00000011010000000000000100
+// 00000100010000000000000101
+// 00000101010000000000000111
+// 00000110010000000000001100
+
+// verilog
+// 00101001100000000000000001
+// 00100011000000000000000001
+// 00100010100000000000000001
+// 00100010000000000000000001
+// 00100001100000000000000001
+// 00000001010000000000000010
+// 00000000010000000000000010
+// 00100001000000000000000010
+// 00100000100000000000000010
+// 00000010010000000000000011
+// 00100011100000000000000011
+// 00000011010000000000000100
+// 00000100010000000000000101
+// 00000101010000000000000111
+
 
 // 0: S : 1
 // 1: F : 1
