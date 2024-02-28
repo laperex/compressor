@@ -2,10 +2,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define PRINT_AS_CHAR
 
 #define FREQ_BIT ((256 * 256) - 1)
 #define DATA_SIZE (12)
-#define NODE_PRINT "%c"
+
+
+#ifdef PRINT_AS_CHAR
+	#define NODE_PRINT "%c"
+#else
+	#define NODE_PRINT "%i"
+#endif
+
 
 void swap_u32(uint32_t* a, uint32_t* b) {
 	uint32_t tmp = *a;
@@ -121,17 +129,15 @@ int main() {
 	
 	uint32_t data_size = init_tree_array(data, tree_index_array, tree_array, &tree_array_idx);
 	
-	printf("---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- \n");
-
-	printf("sorted array size - %i\n", tree_array_idx);
+	uint32_t leaf_count = tree_array_idx;
 	
 	create_tree_nodes(tree_array, &tree_array_idx);
 
 	printf("---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- \n");
-
-	printf("tree array size - %i\n", tree_array_idx);
-
-	printf("---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- \n");
+	
+	printf("huffman tree: array view\n\n");
+	printf("huffman tree array size: %i\n", tree_array_idx);
+	printf("huffman tree leaf count: %i\n\n", leaf_count);
 
 	for (int i = 0; i < tree_array_idx; i++) {
 		printf("%i: ", i);
@@ -142,7 +148,8 @@ int main() {
 		}
 	}
 
-	printf("---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- \n");
+	// printf("---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- \n");
+	printf("\n");
 
 	for (int i = 0; i < tree_array_idx; i++) {
 		printf("%i,", tree_array[i]);
@@ -151,13 +158,17 @@ int main() {
 
 	printf("---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- \n");
 
+	printf("huffman tree: tree view\n\n");
+
 	traverse(tree_array, id_array, tree_array_idx - 1, 0, 1);
 
 	printf("---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- \n");
+	
+	printf("huffman code\n\n");
 
 	for (int i = 0; i < 256; i++) {
 		if (id_array[i]) {
-			printf("(%c) - ", i);
+			printf("(" NODE_PRINT ") - ", i);
 			if (id_array[i] > 511) {
 				printf(" [T] ");
 			}
