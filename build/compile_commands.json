@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/home/laperex/Programming/C++/compressor/build",
+  "command": "/usr/bin/gcc -I/home/laperex/Programming/C++/compressor/include -I/home/laperex/Programming/C++/compressor/src -g -o CMakeFiles/main.dir/src/main.c.o -c /home/laperex/Programming/C++/compressor/src/main.c",
+  "file": "/home/laperex/Programming/C++/compressor/src/main.c",
+  "output": "CMakeFiles/main.dir/src/main.c.o"
+}
+]
