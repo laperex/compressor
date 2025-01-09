@@ -1,4 +1,6 @@
-# Sample Output
+# Huffman Compression Algorithm Implementation
+
+## Sample Output
 
 data = "ABCDEFGGGABS"
 
